@@ -93,7 +93,9 @@ function panels_flexible_convert_settings(&$settings, &$layout) {
 
   if (!empty($layout['layout'])) {
     $settings = $layout['layout']->settings;
-    return $settings;
+    if ($settings) {
+      return $settings;
+    }
   }
 
   if (empty($settings)) {
@@ -253,7 +255,11 @@ function panels_flexible_panels($display, $settings, $layout) {
   $items = array();
   panels_flexible_convert_settings($settings, $layout);
   foreach ($settings['items'] as $id => $item) {
-    if ($item['type'] == 'region') {
+    // Remove garbage values.
+    if (!isset($item['type'])) {
+      unset($items[$id]);
+    }
+    else if ($item['type'] == 'region') {
       $items[$id] = $item['title'];
     }
   }
@@ -591,7 +597,8 @@ function panels_flexible_render_splitter($renderer, $left_id, $right_id) {
     $right_class = $left_class;
   }
 
-  $output = '<div class="panels-flexible-splitter flexible-splitter-for-' . $left_class . '">';
+  $output = '<div tabindex="0"
+    class="panels-flexible-splitter flexible-splitter-for-' . $left_class . '">';
 
   // Name the left object
   $output .= '<span class="panels-flexible-splitter-left">';
@@ -1788,6 +1795,7 @@ function panels_flexible_reuse_form_validate(&$form, &$form_state) {
  * Test for #machine_name type to see if an export exists.
  */
 function panels_flexible_edit_name_exists($name, $element, &$form_state) {
+  ctools_include('export');
   $plugin = $form_state['plugin'];
 
   return (empty($form_state['item']->export_ui_allow_overwrite) && ctools_export_crud_load($plugin['schema'], $name));

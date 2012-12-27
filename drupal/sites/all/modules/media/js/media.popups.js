@@ -46,6 +46,9 @@ Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOpti
 
   // Create it as a modal window.
   var browserSrc = options.widget.src;
+  if ($.isArray(browserSrc) && browserSrc.length) {
+    browserSrc = browserSrc[browserSrc.length - 1];
+  }
   // Params to send along to the iframe.  WIP.
   var params = {};
   $.extend(params, options.global);
@@ -98,8 +101,9 @@ Drupal.media.popups.mediaBrowser = function (onSelect, globalOptions, pluginOpti
 Drupal.media.popups.mediaBrowser.mediaBrowserOnLoad = function (e) {
   var options = e.data;
   if (this.contentWindow.Drupal.media.browser.selectedMedia.length > 0) {
-    var ok = $(this).dialog('option', 'buttons')['OK'];
-    ok.call(this);
+    var ok = (Drupal && Drupal.t) ? Drupal.t('OK') : 'OK';
+    var ok_func = $(this).dialog('option', 'buttons')[ok];
+    ok_func.call(this);
     return;
   }
 };
@@ -333,7 +337,7 @@ Drupal.media.popups.setDialogPadding = function (dialogElement) {
  * Get an iframe to serve as the dialog's contents. Common to both plugins.
  */
 Drupal.media.popups.getPopupIframe = function (src, id, options) {
-  var defaults = {width: '800px', scrolling: 'no'};
+  var defaults = {width: '800px', scrolling: 'auto'};
   var options = $.extend({}, defaults, options);
 
   return $('<iframe class="media-modal-frame"/>')

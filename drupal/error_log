@@ -1,0 +1,2 @@
+[11-Feb-2013 22:15:19 America/Los_Angeles] PHP Fatal error:  Call to undefined function _system_default_theme_features() in /home/nourishc/public_html/includes/theme.inc on line 1405
+[11-Feb-2013 22:15:27 America/Los_Angeles] PHP Fatal error:  Call to undefined function _system_default_theme_features() in /home/nourishc/public_html/includes/theme.inc on line 1405
